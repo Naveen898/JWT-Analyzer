@@ -1,33 +1,39 @@
 from analyzer.decoder import JWTDecoder
 from analyzer.validator import JWTValidator
-from analyzer.signature_verifier import JWTSignatureVerifier
+from analyzer.security import JWTSecurity
 from rich import print
 
 def main():
-    token = input("Enter JWT: ").strip()
+    jwt_input = input("Enter JWT: ").strip()
     
-    # 1. Decode JWT
-    decoder = JWTDecoder(token)
-    header, payload, signature = decoder.decode()
-
-    if header is None or payload is None:
-        print("[red]❌ Failed to decode JWT. Exiting...[/red]")
+    decoder = JWTDecoder(jwt_input)
+    try:
+        decoded = decoder.decode()
+    except Exception as e:
+        print(f"[red]❌ {e}[/red]")
         return
 
-    # 2. Validate JWT claims
-    decoded_token = {
-    "header": header,
-    "payload": payload
-    }
-    validator = JWTValidator(decoded_token)
+    header = decoded.get("header", {})
+    payload = decoded.get("payload", {})
+    signature = decoded.get("signature", "")
 
+    # Display decoded sections
+    decoder.pretty_print()
 
-    # 3. Ask to verify signature
+    # Run claim validation
+    validator = JWTValidator({
+        "header": header,
+        "payload": payload
+    })
+    validator.validate()
+
+    # Signature verification + replay detection
     verify = input("\n🔐 Do you want to verify the JWT signature? (yes/no): ").strip().lower()
     if verify in ("yes", "y"):
         secret = input("🔑 Enter the secret key for signature verification: ").strip()
-        verifier = JWTSignatureVerifier(token, secret)
-        verifier.verify_signature()
+        security = JWTSecurity(jwt_input, header, payload)
+        if security.verify_signature(secret):
+            security.check_replay()
 
 if __name__ == "__main__":
     main()
