@@ -42,6 +42,20 @@ curl -X POST http://127.0.0.1:5001/analyze \
   -d '{"jwt": "<your-jwt-here>"}'
 ```
 
+### 5. Token Generator 
+
+```bash
+python sample_tokens_generator.py
+```
+What it does:
+
+- Prompts user for algorithm, standard & custom claims
+- Supports both HMAC and RSA/ECDSA signing
+- Outputs:
+✅ Encoded JWT
+✅ Decoded payload
+✅ Timestamps (UNIX + human-readable format)
+
 ---
 
 ## 🖥️ CLI Usage
@@ -77,22 +91,6 @@ python cli.py --jwt "<your-jwt-here>"
   "aud": "my-audience"
 }
 ```
-
----
-
-### 4. Token Generator 
-
-```bash
-python sample_tokens_generator.py
-```
-What it does:
-
-- Prompts user for algorithm, standard & custom claims
-- Supports both HMAC and RSA/ECDSA signing
-- Outputs:
-✅ Encoded JWT
-✅ Decoded payload
-✅ Timestamps (UNIX + human-readable format)
 
 ---
 
