@@ -41,10 +41,11 @@ class JWTValidator:
             self.issues.append("[yellow]⚠️ Missing 'iat' (issued at) claim[/yellow]")
 
         # Check nbf (not before)
-        nbf = self.payload.get("nbf")
-        if nbf:
-            if nbf > now:
-                self.issues.append(f"[red]❌ Token is not valid yet (nbf: {nbf}, now: {now})[/red]")
+            # Check nbf (not before)
+            nbf = self.payload.get("nbf")
+            if nbf is not None:
+                if nbf > now:
+                    self.issues.append(f"[red]❌ Token is not valid yet (nbf: {nbf}, now: {now})[/red]")
             else:
                 self.issues.append("[yellow]⚠️ Missing 'nbf' (not before) claim[/yellow]")
 
