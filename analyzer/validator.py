@@ -45,6 +45,8 @@ class JWTValidator:
         if nbf:
             if nbf > now:
                 self.issues.append(f"[red]❌ Token is not valid yet (nbf: {nbf}, now: {now})[/red]")
+            else:
+                self.issues.append("[yellow]⚠️ Missing 'nbf' (not before) claim[/yellow]")
 
     def report_issues(self):
         print("\n[bold magenta]🔍 Validation Results:[/bold magenta]")
